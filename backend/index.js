@@ -21,6 +21,7 @@ app.use("/", User_Authenticated_Router)
 app.get('/', verify_middleware, (req, res) => {
 
 })
+app.use("/",PostRouter)
 http_Server.listen(8080, async () => {
     try {
 
