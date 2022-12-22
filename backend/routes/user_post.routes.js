@@ -2,7 +2,7 @@ const express= require('express');
 const {user_post_modal} = require("../modals/user_post.modal");
 const PostRouter = express.Router();
 
-PostRouter.get("/", async (req, res) => {
+PostRouter.get("/users", async (req, res) => {
     const params = req.query
     try {
         const users = await user_post_modal.find(params)
