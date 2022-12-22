@@ -1,12 +1,26 @@
 const mongoose = require('mongoose')
+const { ObjectId } = mongoose.Types.ObjectId
 
 const user_post_schema = mongoose.Schema({
-    username: { type: String, required: true },
-    user_id: { type: String, required: true },
-    video: { type: String },
-    img: { type: String },
-    caption: { type: String },
-    location: { type: String },
+    title: {
+        type: String,
+        required: true
+    },
+    body: {
+        type: String,
+        required: true
+    },
+    photo: {
+        type: String,
+        required: true
+    },
+    likes: [{ type: ObjectId, ref: "user_collection" }],
+    comments: [{ type: ObjectId, ref: "user_collection" }],
+    postedBy: {
+        type: ObjectId,
+        ref: "user_collection"
+    }
+
 }, {
     versionKey: false,
     timestamps: true
