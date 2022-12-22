@@ -31,4 +31,39 @@ PostRouter.post("/create",async(req,res)=>{
     }
 })
 
+//.......... patch Request
+
+PostRouter.patch("/patch/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const { video, img, caption, location, userID } = req.body;
+  try {
+    const isValid = await user_modal.findOne({ _id: userID });
+    var getPost = await user_post_modal.findOne({ postID: id });
+    if (isValid) {
+      var isUpdate = await user_post_modal.updateOne(
+        { postID: id },
+        {
+          $set: {
+            video: video ? video : getPost.video,
+            img: img ? img : getPost.img,
+            caption: caption ? caption : getPost.caption,
+            location: location ? location : getPost.location,
+          },
+        }
+      );
+    } else {
+      res.status(401).send({
+        message: "You're not authorized",
+      });
+    }
+  } catch (error) {
+    res.status(404).send({
+      message: "Something went wrong",
+    });
+  }
+});
+
+
+
 module.exports = {PostRouter};
