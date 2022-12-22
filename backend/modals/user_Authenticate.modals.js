@@ -11,6 +11,6 @@ const user_schema = mongoose.Schema({
     timestamps: true
 })
 
-const user_modal = mongoose.Schema("user_collection", user_schema)
+const user_modal = mongoose.model("user_collection", user_schema)
 
 module.exports = { user_modal }

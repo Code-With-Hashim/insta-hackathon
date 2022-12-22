@@ -1,6 +1,7 @@
 const express= require('express');
 const {user_post_modal} = require("../modals/user_post.modal");
 const PostRouter = express.Router();
+
 // creating a PostRouter
 var multer  = require('multer')
 require('dotenv').config();
@@ -38,5 +39,19 @@ PostRouter.post("/create",upload.single('post_image'),async(req,res)=>{
         res.status(400).send({msg:"Something wents wrong"});
     }
 })
+PostRouter.get("/", async (req, res) => {
+    const params = req.query
+    try {
+        const users = await user_post_modal.find(params)
+        res.status(200).json(users)
+    }
+    catch (err) {
+        console.log(err)
+        res.status(401).send({
+            message: "Users Data not found",
+            status: "Failed"
+        })
+    }
 
+})
 module.exports = {PostRouter};
