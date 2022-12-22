@@ -49,7 +49,7 @@ PostRouter.post("/create", async (req, res) => {
     }
 
 })
-PostRouter.get("/user", async (req, res) => {
+PostRouter.get("/allUserPost", async (req, res) => {
 
     const params = req.query
     try {
@@ -81,7 +81,7 @@ PostRouter.put("/likes", async (req, res) => {
         } else {
 
             await user_post_modal.findByIdAndUpdate({ _id: req.body.postId }, {
-                $push: { likes : req.user._id }
+                $push: { likes: req.user._id }
             }, {
                 new: true
             }).exec((err, result) => {
@@ -114,7 +114,61 @@ PostRouter.put("/unlikes", async (req, res) => {
                 return res.status(422).json({ msg: 'Something went wrong, please try again' })
             }
 
-            res.json({msg : 'You Disliked it'})
+            res.json({ msg: 'You Disliked it' })
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
+PostRouter.put("/comments", async (req, res) => {
+
+    try {
+        
+        await user_post_modal.findByIdAndUpdate({ _id: req.body.postId }, {
+            $push:  {comments: {
+                _id : new mongoose.Types.ObjectId,
+                username : req.user.username,
+                name : req.user.full_name,
+                text : req.body.text
+            }} 
+        }, {
+            new: true
+        }).exec((err, result) => {
+            if (err) {
+                console.log(err)
+                return res.status(422).json({ msg: 'Something went wrong' })
+            }
+            res.json(result)
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+
+})
+
+PostRouter.put("/uncomments", async (req, res) => {
+
+    try {
+        
+        await user_post_modal.updateOne({ _id: req.body.postId }, {
+             $pull : {
+                comments : {
+                    _id : req.body.comments_id,
+                    username : req.user.username
+                }
+             }
+        }, {
+            new: true
+        }).exec((err, result) => {
+            if (err) {
+                console.log(err)
+                return res.status(422).json({ msg: 'Something went wrong' })
+            }
+            res.json(result)
         })
 
     } catch (error) {

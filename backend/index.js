@@ -22,7 +22,7 @@ const io = new Server(http_Server)
 
 io.on('connection' , (socket) => {
     socket.on('newText'  ,(message) => {
-        io.emit('newText' , message)
+        io.to(socket.id).emit('newText' , message);
     })
     
 })

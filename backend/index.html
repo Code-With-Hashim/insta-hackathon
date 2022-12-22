@@ -27,12 +27,13 @@
         e.preventDefault()
         const message = Inputvalue.value
 
-        socket.emit("newText", message)
+        socket.emit("newText", Inputvalue)
         Inputvalue.value = ""
     })
     socket.on('newText' , (msg) => {
         const divList = document.getElementById('chatli')
         const createLi = document.createElement('li')
+        console.log(msg)
         createLi.innerText = msg
         divList.appendChild(createLi)
     })
