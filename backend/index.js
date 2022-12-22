@@ -34,6 +34,7 @@ app.get('/',  (req, res) => {
     res.sendFile(__dirname + "/index.html")
 
 })
+app.use("/",PostRouter)
 http_Server.listen(8080, async () => {
     try {
 
