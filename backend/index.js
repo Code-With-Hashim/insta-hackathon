@@ -37,7 +37,6 @@ app.get('/',  (req, res) => {
 app.use("/",PostRouter)
 http_Server.listen(8080, async () => {
     try {
-
         await connect
         console.log('Database is connected Successfully')
         console.log('Listening on port 8080')

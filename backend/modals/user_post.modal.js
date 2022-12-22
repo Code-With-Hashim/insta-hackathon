@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const { ObjectId } = mongoose.Types.ObjectId
+const  {ObjectId}  = mongoose.Schema.Types
 
-const user_post_schema = mongoose.Schema({
+const user_post_schema = new mongoose.Schema({
     title: {
         type: String,
         required: true
