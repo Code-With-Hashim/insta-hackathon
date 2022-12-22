@@ -29,7 +29,6 @@ PostRouter.post("/create",upload.single('post_image'),async(req,res)=>{
     console.log(payload);
     if(payload.username &&  payload.user_id){
         let result = await cloudinary.uploader.upload(req.file.path);
-        // console.log(result);
         payload.img = result.url;
         let data = await user_post_modal(payload);
         data.save();
