@@ -12,6 +12,6 @@ const user_post_schema = mongoose.Schema({
     timestamps: true
 })
 
-const user_post_modal = mongoose.Schema("user_post_collection", user_post_schema)
+const user_post_modal = mongoose.model("user_post_collection", user_post_schema)
 
 module.exports = { user_post_modal }
