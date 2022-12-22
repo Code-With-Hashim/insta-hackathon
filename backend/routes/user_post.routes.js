@@ -21,16 +21,16 @@ routes.patch("/:id", async (req, res) => {
   const { video, img, caption, location, userID } = req.body;
   try {
     const isValid = await user_modal.findOne({ _id: userID });
-
+    var getPost = await user_post_modal.findOne({ postID: id });
     if (isValid) {
       var isUpdate = await user_post_modal.updateOne(
         { postID: id },
         {
           $set: {
-            video: video,
-            img: img,
-            caption: caption,
-            location: location,
+            video: video ? video : getPost.video,
+            img: img ? img : getPost.img,
+            caption: caption ? caption : getPost.caption,
+            location: location ? location : getPost.location,
           },
         }
       );
