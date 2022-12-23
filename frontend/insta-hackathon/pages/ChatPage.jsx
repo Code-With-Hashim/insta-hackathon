@@ -1,7 +1,7 @@
-import { ChatApp } from "../components/Chat_App/ChatApp"
+// import { ChatApp } from "../components/Chat_App/ChatApp"
 
-export default function ChatPage (){
-    return (
-        <ChatApp />
-    )
-}
+// export default function ChatPage (){
+//     return (
+//         <ChatApp />
+//     )
+// }
