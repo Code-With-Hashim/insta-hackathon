@@ -1,13 +1,12 @@
-const express = require("express")
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
-const multer = require("multer")
-const path = require('path')
-const cloudinary = require('cloudinary')
-const { user_modal } = require("../modals/user_Authenticate.modals")
+const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const path = require("path");
+const cloudinary = require("cloudinary");
+const { user_modal } = require("../modals/user_Authenticate.modals");
 
-
- const SECRET_KEY  = process.env.SECRET_KEY
+const SECRET_KEY = process.env.SECRET_KEY;
 
 // cloudinary.config({
 //     cloud_name: process.env.CLOUD_NAME,
@@ -17,8 +16,7 @@ const { user_modal } = require("../modals/user_Authenticate.modals")
 
 // const SECRET_KEY = process.env.SECRET_KEY
 
-const User_Authenticated_Router = express.Router()
-
+const User_Authenticated_Router = express.Router();
 
 // const storage = multer.diskStorage({
 //     destination: path.join(__dirname, '..', "User_Profile_Uploads"),
@@ -30,117 +28,102 @@ const User_Authenticated_Router = express.Router()
 
 // const upload = multer({ storage: storage })
 
-
 User_Authenticated_Router.post("/signup", async (req, res) => {
-    const { email, password, username, full_name } = req.body
+  const { email, password, username, full_name } = req.body;
 
-    console.log(email)
+  console.log(email);
 
-    try {
+  try {
+    const existingUser = await user_modal.findOne({
+      $or: [{ email }, { username }],
+    });
 
-        const existingUser = await user_modal.findOne({ $or: [{ email }, { username }] })
-
-        if (existingUser) {
-            res.status(403).send({
-                message: "User Already exist",
-                status: "Failed"
-            })
-
-        } else {
-
-
-            bcrypt.hash(password, 5, async function (err, hash) {
-                if (err) {
-                    console.log(error)
-                    res.status(404).send({
-                        message: "Something went wrong",
-                        status: "Failed"
-                    })
-                } else {
-
-                    try {
-
-                        await user_modal.create(
-                            {
-                                email,
-                                username,
-                                password: hash,
-                                full_name
-                            })
-
-
-                        res.status(201).send({
-                            message: "User Created Successfully",
-                            status: "Success"
-                        })
-
-                    } catch (error) {
-                        console.log(error)
-                        res.status(404).send({
-                            message: "Something went wrong",
-                            status: "Failed"
-                        })
-
-                    }
-
-                }
-            });
-        }
-
-    } catch (error) {
-        console.log(error)
-        res.status(404).send({
+    if (existingUser) {
+      res.status(403).send({
+        message: "User Already exist",
+        status: "Failed",
+      });
+    } else {
+      bcrypt.hash(password, 5, async function (err, hash) {
+        if (err) {
+          console.log(error);
+          res.status(404).send({
             message: "Something went wrong",
-            status: "Failed"
-        })
+            status: "Failed",
+          });
+        } else {
+          try {
+            await user_modal.create({
+              email,
+              username,
+              password: hash,
+              full_name,
+            });
 
+            res.status(201).send({
+              message: "User Created Successfully",
+              status: "Success",
+            });
+          } catch (error) {
+            console.log(error);
+            res.status(404).send({
+              message: "Something went wrong",
+              status: "Failed",
+            });
+          }
+        }
+      });
     }
-
-
-})
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({
+      message: "Something went wrong",
+      status: "Failed",
+    });
+  }
+});
 
 User_Authenticated_Router.post("/login", async (req, res) => {
-    const { email, password  , username} = req.body
+  const { email, password, username } = req.body;
 
-    try {
+  try {
+    const existingUser = await user_modal.findOne({
+      $or: [{ email }, { username }],
+    });
 
-        const existingUser = await user_modal.findOne({ $or: [{ email} , {username}] })
-
-        if (existingUser) {
-
-
-            bcrypt.compare(password, existingUser.password, function (err, result) {
-                if (result) {
-                    const token = jwt.sign({  User_id : existingUser._id , username : existingUser.username }, SECRET_KEY)
-                    res.status(200).send({
-                        message: "Login Successfully",
-                        status: "Success",
-                        token
-                    })
-                } else {
-                    res.status(401).send({
-                        message: "Login Failed, Please try again",
-                        status: "Failed",
-                    })
-                }
-            });
-
+    if (existingUser) {
+      bcrypt.compare(password, existingUser.password, function (err, result) {
+        if (result) {
+          const token = jwt.sign(
+            { User_id: existingUser._id, username: existingUser.username },
+            SECRET_KEY
+          );
+          res.status(200).send({
+            message: "Login Successfully",
+            status: "Success",
+            token,
+          });
         } else {
-            res.status(401).send({
-                message: "User not exist Create an account",
-                status: "Failed"
-            })
+          res.status(401).send({
+            message: "Login Failed, Please try again",
+            status: "Failed",
+          });
         }
-
-
-    } catch (error) {
-        console.log(error)
-        res.status(404).send({
-            message: "Something went wrong , please try again",
-            status: "Failed"
-        })
+      });
+    } else {
+      res.status(401).send({
+        message: "User not exist Create an account",
+        status: "Failed",
+      });
     }
-})
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({
+      message: "Something went wrong , please try again",
+      status: "Failed",
+    });
+  }
+});
 
 // User_Authenticated_Router.patch("/updatedetail", authentication, upload.single('avatar'), async (req, res) => {
 
@@ -152,9 +135,6 @@ User_Authenticated_Router.post("/login", async (req, res) => {
 //     if (phoneNumber === "") phoneNumber = undefined
 //     if (gender === "") gender = undefined
 //     if (maritalStatus === "") maritalStatus = undefined
-
-
-
 
 //     try {
 
@@ -188,7 +168,6 @@ User_Authenticated_Router.post("/login", async (req, res) => {
 
 //                 })
 
-
 //             }
 
 //             res.status(200).send({
@@ -213,6 +192,4 @@ User_Authenticated_Router.post("/login", async (req, res) => {
 
 // })
 
-
-
-module.exports = { User_Authenticated_Router }
+module.exports = { User_Authenticated_Router };

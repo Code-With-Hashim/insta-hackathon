@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useToast } from "@chakra-ui/react";
 const Login = () => {
@@ -14,16 +15,26 @@ const Login = () => {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     console.log(data);
-    if (data.email != undefined&&data.email.includes("@") && data.password != undefined) {
+    if (
+      data.email != undefined &&
+      data.email.includes("@") &&
+      data.password != undefined &&
+      data.username != undefined
+    ) {
       try {
-        // axios.post("http://localhost:8080/user/signup", data).then((res) => {
-        // console.log(res);
-
-        router.push("/");
-        // });
+        await axios.post("http://localhost:8080/login", data).then((res) => {
+          console.log(res);
+          toast({
+            title: "Login Successfull",
+            status: "success",
+            position: "top",
+            isClosable: true,
+          });
+          router.push("/");
+        });
       } catch (error) {
         toast({
           title: "Please Enter Correct Details...!",
@@ -59,6 +70,21 @@ const Login = () => {
         <form class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
           <div class="-space-y-px rounded-md shadow-sm">
+            <div>
+              <label for="password" class="sr-only">
+                Password
+              </label>
+              <input
+                id="password"
+                name="username"
+                type="text"
+                required
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Username"
+                minLength="6"
+                onChange={handleOnchange}
+              />
+            </div>
             <div>
               <label for="email-address" class="sr-only">
                 Email address
