@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useToast } from "@chakra-ui/react";
 const Signup = () => {
@@ -14,7 +15,7 @@ const Signup = () => {
     });
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     console.log(data);
     if (
@@ -23,21 +24,27 @@ const Signup = () => {
       data.email.includes("@") &&
       data.password != undefined &&
       data.password.length > 5 &&
-      data.name != undefined
+      data.full_name != undefined
     ) {
+      console.log("If condition");
       try {
-        // axios.post("http://localhost:8080/user/signup", data).then((res) => {
-        // console.log(res);
-
-        router.push("/login");
-        // });
+        await axios.post("http://localhost:8080/signup", data).then((res) => {
+          console.log(res);
+          toast({
+            title: "Signup Successfull!",
+            status: "success",
+            position: "top",
+            isClosable: true,
+          });
+          router.push("/login");
+        });
       } catch (error) {
         console.log("Error While SignUp");
       }
     } else {
       toast({
         title: "Please Enter All Details...!",
-        description:"Password Should be more than 6 digit",
+        description: "Password Should be more than 6 digit",
         status: "error",
         position: "top",
         isClosable: true,
@@ -114,12 +121,12 @@ const Signup = () => {
               </label>
               <input
                 id="password"
-                name="name"
+                name="full_name"
                 type="text"
                 autocomplete="current-password"
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Name"
+                placeholder="full_name"
                 minLength="6"
                 onChange={handleOnchange}
               />
