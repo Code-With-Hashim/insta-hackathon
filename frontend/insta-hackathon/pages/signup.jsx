@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useToast } from "@chakra-ui/react";
-const Login = () => {
+const Signup = () => {
   const [data, setData] = useState({});
   const router = useRouter();
   const toast = useToast();
@@ -14,28 +14,30 @@ const Login = () => {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault();
     console.log(data);
-    if (data.email != undefined&&data.email.includes("@") && data.password != undefined) {
+    if (
+      data.username != undefined &&
+      data.email != undefined &&
+      data.email.includes("@") &&
+      data.password != undefined &&
+      data.password.length > 5 &&
+      data.name != undefined
+    ) {
       try {
         // axios.post("http://localhost:8080/user/signup", data).then((res) => {
         // console.log(res);
 
-        router.push("/");
+        router.push("/login");
         // });
       } catch (error) {
-        toast({
-          title: "Please Enter Correct Details...!",
-          status: "error",
-          position: "top",
-          isClosable: true,
-        });
-        console.log("Error While Login");
+        console.log("Error While SignUp");
       }
     } else {
       toast({
-        title: "Please Enter Correct Details...!",
+        title: "Please Enter All Details...!",
+        description:"Password Should be more than 6 digit",
         status: "error",
         position: "top",
         isClosable: true,
@@ -53,13 +55,29 @@ const Login = () => {
             alt="Your Company"
           />
           <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Sign up to your account
           </h2>
         </div>
         <form class="mt-8 space-y-6" action="#" method="POST">
           <input type="hidden" name="remember" value="true" />
           <div class="-space-y-px rounded-md shadow-sm">
-            <div>
+            <div class="mb-3 space-y-6">
+              <label for="username" class="sr-only ">
+                Username
+              </label>
+              <input
+                id="password"
+                name="username"
+                type="text"
+                autocomplete="current-password"
+                required
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Username"
+                minLength="6"
+                onChange={handleOnchange}
+              />
+            </div>
+            <div class="mb-3 space-y-6">
               <label for="email-address" class="sr-only">
                 Email address
               </label>
@@ -70,11 +88,11 @@ const Login = () => {
                 autocomplete="email"
                 required
                 class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Email address"
+                placeholder="Email"
                 onChange={handleOnchange}
               />
             </div>
-            <div>
+            <div class="mb-3 space-y-6">
               <label for="password" class="sr-only">
                 Password
               </label>
@@ -86,6 +104,22 @@ const Login = () => {
                 required
                 class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Password"
+                minLength={6}
+                onChange={handleOnchange}
+              />
+            </div>
+            <div class="mb-3 space-y-6">
+              <label for="password" class="sr-only">
+                Name
+              </label>
+              <input
+                id="password"
+                name="name"
+                type="text"
+                autocomplete="current-password"
+                required
+                class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                placeholder="Name"
                 minLength="6"
                 onChange={handleOnchange}
               />
@@ -116,9 +150,9 @@ const Login = () => {
           </div>
 
           <div>
-            {/* <Link href="/"> */}{" "}
+            {/* <Link href="/login"> */}{" "}
             <button
-              onClick={handleLogin}
+              onClick={handleSignUp}
               type="submit"
               class="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
@@ -137,15 +171,9 @@ const Login = () => {
                   />
                 </svg>
               </span>
-              Sign in
+              Sign Up
             </button>
             {/* </Link> */}
-            <Link href="/signup">
-              {" "}
-              <p class="mt-6 text-center text-sm font-bold tracking-tight text-gray-900">
-                Create your account
-              </p>
-            </Link>
           </div>
         </form>
       </div>
@@ -153,4 +181,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
