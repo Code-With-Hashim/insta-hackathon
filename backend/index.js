@@ -21,8 +21,9 @@ app.use(cookieParser())
 const io = new Server(http_Server)
 
 io.on('connection' , (socket) => {
-    socket.on('newText'  ,(message) => {
-        io.to(socket.id).emit('newText' , message);
+   
+    socket.on('join' , () => {
+        console.log('A new Connected Join us')
     })
     
 })
