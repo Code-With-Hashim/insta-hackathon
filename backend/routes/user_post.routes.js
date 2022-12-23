@@ -1,6 +1,7 @@
 const express = require('express');
 const { user_post_modal } = require("../modals/user_post.modal");
 const PostRouter = express.Router();
+const path = require('path')
 
 // creating a PostRouter
 var multer = require('multer');
@@ -12,26 +13,26 @@ const cloudinary = require('cloudinary').v2;
 
 PostRouter.use(verify_middleware)
 // Return "https" URLs by setting secure: true
-cloudinary.config({
-    cloud_name: process.env.cloud_name,
-    api_key: process.env.api_key,
-    api_secret: process.env.api_secret
-});
+// cloudinary.config({
+//     cloud_name: process.env.cloud_name,
+//     api_key: process.env.api_key,
+//     api_secret: process.env.api_secret
+// });
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
-    }
-})
-var upload = multer({ storage: storage })
-
-// upload.single('post_image')
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, path.join(__dirname+"uploads"))
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.originalname)
+//     }
+// })
+// const upload = multer({ storage: storage })
 
 PostRouter.post("/create", async (req, res) => {
-    const { title, body, photo } = req.body;
+    const { title, body , photo} = req.body;
+
+  
 
     try {
 
